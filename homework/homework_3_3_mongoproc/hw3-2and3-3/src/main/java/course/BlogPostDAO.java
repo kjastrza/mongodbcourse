@@ -17,15 +17,15 @@
 
 package course;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import org.apache.commons.lang3.StringUtils;
+import com.mongodb.WriteResult;
+import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
+
+import java.util.List;
 
 public class BlogPostDAO {
     DBCollection postsCollection;
@@ -37,8 +37,9 @@ public class BlogPostDAO {
     // Return a single post corresponding to a permalink
     public DBObject findByPermalink(String permalink) {
 
-        DBObject post = postsCollection.findOne(new BasicDBObject("permalink", permalink));
+        DBObject post = null;
         // XXX HW 3.2,  Work Here
+
 
 
         return post;
@@ -48,7 +49,7 @@ public class BlogPostDAO {
     // how many posts are returned.
     public List<DBObject> findByDateDescending(int limit) {
 
-        List<DBObject> posts = postsCollection.find().sort(new BasicDBObject("date", -1)).limit(limit).toArray();
+        List<DBObject> posts = null;
         // XXX HW 3.2,  Work Here
         // Return a list of DBObjects, each one a post from the posts collection
 
@@ -65,6 +66,7 @@ public class BlogPostDAO {
         permalink = permalink.toLowerCase();
 
 
+        BasicDBObject post = new BasicDBObject();
         // XXX HW 3.2, Work Here
         // Remember that a valid post has the following keys:
         // author, body, permalink, tags, comments, date
@@ -76,20 +78,21 @@ public class BlogPostDAO {
         // - we created the permalink for you above.
 
         // Build the post object and insert it
-        BasicDBObject post = new BasicDBObject("author", username).
-                append("title", title).
-                append("body", body).
-                append("permalink", permalink).
-                append("tags", tags).
-                append("comments", new ArrayList<String>()).
-                append("date", new Date());
 
-        postsCollection.insert(post);
+
         return permalink;
     }
 
 
-    // White space to protect the innocent
+
+
+   // White space to protect the innocent
+
+
+
+
+
+
 
 
     // Append a comment to a blog post
@@ -102,14 +105,8 @@ public class BlogPostDAO {
         // - best solution uses an update command to the database and a suitable
         //   operator to append the comment on to any existing list of comments
 
-        BasicDBObject comment = new BasicDBObject("author", name);
 
-        if (StringUtils.isNotBlank(email)) {
-            comment.append("email", email);
-        }
-        comment.append("body", body);
 
-        postsCollection.update(new BasicDBObject("permalink", permalink), new BasicDBObject("$push", new BasicDBObject("comments", comment)));
     }
 
 
